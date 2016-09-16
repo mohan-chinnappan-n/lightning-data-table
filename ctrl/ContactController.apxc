@@ -1,0 +1,47 @@
+public with sharing class ContactController {
+
+    @AuraEnabled
+    public static List<Contact> findAll(String lmt, String currentPage) {
+       //
+        Integer ofset =  integer.valueof(lmt) * (integer.valueof(currentPage) - 1) ;
+
+        System.debug('currentPage = ' + currentPage);
+        System.debug('lmt = ' + lmt);
+        //System.debug('ofset = ' +  currentPage * lmt ); // Internal error: https://developer.salesforce.com/forums/?id=906F00000005FxqIAE
+        String soqlStr = ' SELECT id, name, phone, email FROM Contact LIMIT '
+                              + lmt + ' OFFSET ' + ofset;
+        return database.query(soqlstr);
+        // TODO: Add errror handling...
+    }
+
+    @AuraEnabled
+    public static List<Contact> findByName(String lmt,String currentPage, String searchKey) {
+
+          Integer ofset =  integer.valueof(lmt) * (integer.valueof(currentPage) - 1) ;
+
+        String soqlStr = 'SELECT id, name, phone, email FROM Contact WHERE name LIKE \'%' + searchKey + '%\' LIMIT ' 
+            +  lmt + ' OFFSET ' + ofset;
+        return database.query(soqlStr);
+       // TODO: Add errror handling...
+    }
+
+    @AuraEnabled
+    public static Contact findById(String lmt, String contactId) {
+        return [SELECT id, name, title, phone, mobilephone, Account.Name
+                    FROM Contact WHERE Id = :contactId];
+       // TODO: Add errror handling...
+    }
+
+    @AuraEnabled
+    public static List<Contact> sortByField(String lmt, Integer currentPage, String column, String dir) {
+
+         Integer ofset =  integer.valueof(lmt) * (integer.valueof(currentPage) - 1) ;
+
+       String soqlStr = 'SELECT id, name, phone, email FROM Contact ' + ' ORDER BY ' + column + ' ' + dir
+                +  ' LIMIT ' + lmt + ' OFFSET ' + ofset;
+       return database.query(soqlStr );
+       // TODO: Add errror handling...
+
+    }
+
+}

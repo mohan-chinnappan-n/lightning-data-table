@@ -1,0 +1,6 @@
+<aura:event type="APPLICATION" description="PageSizeChange event" >
+    <!--
+      The event holds one argument: the new pageSize
+     -->
+    <aura:attribute name="pageSize" type="Integer"/>
+</aura:event>

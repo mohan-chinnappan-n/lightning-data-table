@@ -1,0 +1,6 @@
+<aura:event type="APPLICATION" description="SearchKeyChange event" >
+    <!--
+      The event holds one argument: the new searchKey
+     -->
+    <aura:attribute name="searchKey" type="String"/>
+</aura:event>

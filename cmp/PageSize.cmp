@@ -1,0 +1,5 @@
+<aura:component >
+	<input type="number" class="form-control" onchange="{!c.pageSizeChange}" placeholder="page size"
+            value="15"/>
+
+</aura:component>

@@ -1,0 +1,75 @@
+<aura:component controller="mohansundar.ContactController">
+
+    <aura:attribute name="contacts" type="Contact[]"/>
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+
+    <aura:attribute name="pageSize" type="Integer" default="15"/>
+    <aura:attribute name="currentPage" type="Integer" default="1"/>
+
+    <!--
+
+     The handler is set up to execute the searchKeyChange() function in the controller
+
+    -->
+    <aura:handler event="mohansundar:SearchKeyChange" action="{!c.searchKeyChange}"/>
+
+    <aura:handler event="mohansundar:PageSizeChange" action="{!c.pageSizeChange}"/>
+    <aura:handler event="mohansundar:CurrentPageChange" action="{!c.currentPageChange}"/>
+
+
+
+    
+
+
+    <!--
+   <ul class="list-group">
+        <aura:iteration items="{!v.contacts}" var="contact">
+            <li class="list-group-item">
+                <a href="{! '#contact/' + contact.Id }">
+                    <p>{!contact.Name}</p>
+                    <p>{!contact.Phone}</p>
+                </a>
+            </li>
+        </aura:iteration>
+    </ul>
+  -->
+
+
+
+
+    <table class='table table-bordered  table-striped'>
+        <tr>
+            <th>Id</th>
+            <th id='name'  data-dir='asc'  onclick="{!c.sortColumn}">Name </th>
+            <th id='phone' data-dir='asc' onclick="{!c.sortColumn}">Phone</th>
+            <th id='email' data-dir='asc' onclick="{!c.sortColumn}">Email</th>
+        </tr>
+
+        <aura:iteration items="{!v.contacts}" var="contact">
+            <tr><td>
+                <a href="{! '#contact/' + contact.Id }">
+                    <p>{!contact.Id}</p>
+                </a>
+                </td>
+                <td>
+                    <p>{!contact.Name}</p>
+
+                </td>
+                <td>
+                    <p>{!contact.Phone}</p>
+
+                </td>
+
+                <td>
+                    <p>{!contact.Email}</p>
+
+                </td>
+
+
+            </tr>
+        </aura:iteration>
+    </table>
+
+
+
+</aura:component>

@@ -1,0 +1,28 @@
+<aura:component controller="mohansundar.ContactController">
+
+    <!--
+       The contact attribute is defined to hold the displayed Contact.
+    -->
+    <aura:attribute name="contact" type="Contact"
+                    default="{'sobjectType': 'Contact'}"/>
+    <!--
+     In the ContactList component, we wrapped each contact in the list with a
+       <a href="{! '#contact/' + contact.Id }"> anchor tag
+         that sets the page hashtag to #contact/ followed by the
+         contact id of the clicked contact.
+
+        In this component, the locationChange handler is defined to
+        listen to hashtag changes,
+        and execute the controller's locationChange() when it happens.
+    -->
+    <aura:handler event="aura:locationChange" action="{!c.locationChange}"/>
+
+    <div class="details">
+        <h1>{!v.contact.Name}</h1>
+        <h3>{!v.contact.Account.Name}</h3>
+        <h3>{!v.contact.Title}</h3>
+        <p>{!v.contact.Phone}</p>
+        {!v.contact.MobilePhone}
+    </div>
+
+</aura:component>

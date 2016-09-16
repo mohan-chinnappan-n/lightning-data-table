@@ -1,0 +1,5 @@
+<aura:component >
+	<input type="number" class="form-control" onchange="{!c.currentPageChange}" value='1' min='1'
+            placeholder="Current Page"/>
+
+</aura:component>
