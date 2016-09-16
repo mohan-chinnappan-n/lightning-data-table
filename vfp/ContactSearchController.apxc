@@ -1,0 +1,129 @@
+public with sharing class ContactSearchController {
+
+  // ref: Jeff's page:
+  // http://blog.jeffdouglas.com/2010/07/13/building-a-dynamic-search-page-in-visualforce/
+  // modifications: mohanc
+
+  // the soql without the order and limit
+  private String soql {get;set;}
+  // the collection of contacts to display
+  public List<Contact> contacts {get;set;}
+
+  public Integer page = 0;    // init page
+  public Integer pageSize = 5;
+  public Integer defaultPageSize = 5;
+
+  public void next() {
+	addPage(1);
+   }
+  public void prev() {
+    addPage(-1);
+  }
+
+    public void addPage(Integer val) {
+
+      page += val;
+
+       runQuery();
+
+}
+
+  // the current sort direction. defaults to asc
+  public String sortDir {
+    get  { if (sortDir == null) {  sortDir = 'asc'; } return sortDir;  }
+    set;
+  }
+
+  // the current field to sort by. defaults to last name
+  public String sortField {
+    get  { if (sortField == null) {sortField = 'lastName'; } return sortField;  }
+    set;
+  }
+
+  // format the soql for display on the visualforce page
+  public String debugSoql {
+    get { return soql + ' ORDER BY ' + sortField + ' ' + sortDir + ' LIMIT ' + pageSize; }
+    set;
+  }
+
+  // init the controller and display some sample data when the page loads
+  public ContactSearchController() {
+    soql = 'SELECT firstname, lastname, account.name, interested_technologies__c FROM  contact WHERE account.name != null';
+    runQuery();
+  }
+
+  // toggles the sorting of query from asc<-->desc
+  public void toggleSort() {
+    // simply toggle the direction
+    sortDir = sortDir.equals('asc') ? 'DESC' : 'ASC';
+    // run the query again
+    runQuery();
+  }
+
+  // runs the actual query
+  public void runQuery() {
+
+    try {
+      String query = soql + ' ORDER BY ' + sortField + ' ' + sortDir + ' LIMIT  ' + pageSize;
+        if(page != 0){
+            query += ' OFFSET ' + String.valueof(page * pageSize);
+        }
+      contacts = Database.query(query);
+    } catch (Exception e) {
+      ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, 'Error: ' + e));
+    }
+
+  }
+
+  // runs the search with parameters passed via Javascript
+  public PageReference runSearch() {
+
+    String firstName = Apexpages.currentPage().getParameters().get('firstname');
+    String lastName = Apexpages.currentPage().getParameters().get('lastname');
+    String accountName = Apexpages.currentPage().getParameters().get('accountName');
+    String technology = Apexpages.currentPage().getParameters().get('technology');
+    String strPageSize =  Apexpages.currentPage().getParameters().get('pageSize');
+    if (strPageSize == null) strPageSize = '5';
+    pageSize = Integer.valueOf( strPageSize);
+      if (pageSize == null) {
+          pageSize = defaultPageSize;
+      }
+
+
+    soql = 'SELECT firstname, lastname, account.name, interested_technologies__c FROM contact WHERE account.name != null';
+    if (!firstName.equals(''))
+      soql += ' and firstname LIKE \'' +String.escapeSingleQuotes(firstName)+'%\'';
+    if (!lastName.equals(''))
+      soql += ' and lastname LIKE \''+String.escapeSingleQuotes(lastName)+'%\'';
+    if (!accountName.equals(''))
+      soql += ' and account.name LIKE \''+String.escapeSingleQuotes(accountName)+'%\'';
+    if (!technology.equals(''))
+      soql += ' and interested_technologies__c  LIKE \''+String.escapeSingleQuotes(technology)+'%\'';
+
+    // run the query again
+    runQuery();
+    page = 0;
+
+
+    return null;
+  }
+
+   // use apex describe to build the picklist values
+  public List<String> technologies {
+    get {
+      if (technologies == null) {
+
+        technologies = new List<String>();
+        Schema.DescribeFieldResult field = Contact.interested_technologies__c.getDescribe();
+
+        for (Schema.PicklistEntry f : field.getPicklistValues())
+          technologies.add(f.getLabel());
+
+      }
+      return technologies;
+    }
+    set;
+  }
+
+
+}

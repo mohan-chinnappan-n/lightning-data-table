@@ -1,0 +1,156 @@
+<apex:page applyBodyTag="false" applyHtmlTag="false" controller="ContactSearchController" docType="html-5.0" showHeader="false" sidebar="false" standardStylesheets="false">
+  <html xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg">
+    <head>
+      <apex:stylesheet value="{!URLFOR($Resource.SLDS202, 'assets/styles/salesforce-lightning-design-system-vf.css')}"/>
+
+    </head>
+    <body>
+      <!-- REQUIRED SLDS WRAPPER -->
+      <div class="mohansun">
+
+        <apex:form >
+          <apex:pageMessages id="errors"/>
+          <br/>
+          <div class="slds-page-header" role="banner">
+            <div class="slds-media slds-media--center">
+              <div class="slds-media__figure">
+                <svg aria-hidden="true" class="slds-icon slds-icon-standard-contact  slds-icon--small">
+                  <use xlink:href="/assets/icons/standard-sprite/svg/symbols.svg#contatct "></use>
+                </svg>
+              </div>
+              <div class="slds-media__body">
+                <p class="slds-page-header__title slds-truncate slds-align-middle" title="Customer Search">Customer Search</p>
+
+              </div>
+            </div>
+          </div>
+
+          <apex:pageBlock mode="edit">
+
+            <table border="0" class="slds-table slds-table--bordered slds-table--cell-buffer" width="100%">
+              <tr>
+                <td valign="top">
+
+                  <apex:pageBlock id="criteria" mode="edit">
+
+                    <script type="text/javascript">
+                      function doSearch () {
+                        searchServer(document.getElementById("pageSize").value, document.getElementById("firstName").value, document.getElementById("lastName").value, document.getElementById("accountName").value, document.getElementById("technology").options[
+                          document.getElementById("technology")
+                            .selectedIndex
+                        ].value);
+                      }
+                    </script>
+
+                    <apex:actionFunction action="{!runSearch}" name="searchServer" rerender="results,debug,errors">
+                      <apex:param name="pageSize" value="5"/>
+                      <apex:param name="firstName" value=""/>
+                      <apex:param name="lastName" value=""/>
+                      <apex:param name="accountName" value=""/>
+                      <apex:param name="technology" value=""/>
+                    </apex:actionFunction>
+
+                    <table cellpadding="2" cellspacing="2" style="width:100%">
+                      <tr>
+                        <td style="font-weight:bold; width:200px;">
+                          <input id="firstName" onkeyup="doSearch();" type="text"/>
+                        </td>
+
+                        <td style="font-weight:bold;width:200px;">
+                          <input id="lastName" onkeyup="doSearch();" type="text"/>
+                        </td>
+
+                        <td style="font-weight:bold;width:200px;">
+                          <input id="accountName" onkeyup="doSearch();" type="text"/>
+                        </td>
+
+                        <td style="font-weight:bold;width:200px;">
+                          <select id="technology" onchange="doSearch();">
+                            <option value=""></option>
+                            <apex:repeat value="{!technologies}" var="tech">
+                              <option value="{!tech}">{!tech}</option>
+                            </apex:repeat>
+                          </select>
+                        </td>
+                      </tr>
+                    </table>
+
+                  </apex:pageBlock>
+
+                </td>
+              </tr>
+              <tr>
+                <td valign="top">
+
+                  <apex:pageBlock id="results" mode="edit">
+
+                    <apex:pageBlockTable value="{!contacts}" var="contact">
+
+                      <apex:column style="width:200px;">
+
+                        <apex:facet name="header">
+
+                          <apex:commandLink action="{!toggleSort}" rerender="results,debug" value="First Name">
+                            <apex:param assignTo="{!sortField}" name="sortField" value="firstName"/>
+                          </apex:commandLink>
+
+                        </apex:facet>
+                        <apex:outputField value="{!contact.firstName}"/>
+                      </apex:column>
+
+                      <apex:column style="width:200px;">
+                        <apex:facet name="header">
+                          <apex:commandLink action="{!toggleSort}" rerender="results,debug" value="Last Name">
+                            <apex:param assignTo="{!sortField}" name="sortField" value="lastName"/>
+                          </apex:commandLink>
+                        </apex:facet>
+                        <apex:outputField value="{!contact.lastName}"/>
+                      </apex:column>
+
+                      <apex:column style="width:200px;">
+                        <apex:facet name="header">
+                          <apex:commandLink action="{!toggleSort}" rerender="results,debug" value="Account">
+                            <apex:param assignTo="{!sortField}" name="sortField" value="account.name"/>
+                          </apex:commandLink>
+                        </apex:facet>
+                        <apex:outputField value="{!contact.account.name}"/>
+                      </apex:column>
+
+                      <apex:column style="width:200px;">
+                        <apex:facet name="header">
+                          <apex:commandLink action="{!toggleSort}" rerender="results,debug" value="Technologies">
+                            <apex:param assignTo="{!sortField}" name="sortField" value="interested_technologies__c"/>
+                          </apex:commandLink>
+                        </apex:facet>
+                        <apex:outputField value="{!contact.interested_technologies__c}"/>
+                      </apex:column>
+
+                    </apex:pageBlockTable>
+
+                  </apex:pageBlock>
+                  <apex:commandlink action="{!prev}" rerender="results, debug" value="< PREV"/>
+                  &nbsp; | &nbsp;
+
+                  <apex:commandlink action="{!next}" rerender="results,debug" value="NEXT >"/>
+                  &nbsp; &nbsp; Page Size:
+                  <input id="pageSize" max='10' min='1' onChange="doSearch();" type="number" value='5'/>
+
+                </td>
+              </tr>
+            </table>
+
+            <!--
+      <hr/>
+  <apex:pageBlock title="Query :: SOQL used: " id="debug">
+      <apex:outputText value="{!debugSoql}" />
+  </apex:pageBlock>
+-->
+
+          </apex:pageBlock>
+
+        </apex:form>
+      </div>
+    </body>
+  </html>
+
+</apex:page>
