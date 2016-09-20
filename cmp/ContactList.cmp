@@ -18,7 +18,7 @@
 
 
 
-    
+
 
 
     <!--
@@ -38,36 +38,39 @@
 
 
     <table class='table table-bordered  table-striped'>
-        <tr>
-            <th>Id</th>
-            <th id='name'  data-dir='asc'  onclick="{!c.sortColumn}">Name </th>
-            <th id='phone' data-dir='asc' onclick="{!c.sortColumn}">Phone</th>
-            <th id='email' data-dir='asc' onclick="{!c.sortColumn}">Email</th>
-        </tr>
-
-        <aura:iteration items="{!v.contacts}" var="contact">
-            <tr><td>
-                <a href="{! '#contact/' + contact.Id }">
-                    <p>{!contact.Id}</p>
-                </a>
-                </td>
-                <td>
-                    <p>{!contact.Name}</p>
-
-                </td>
-                <td>
-                    <p>{!contact.Phone}</p>
-
-                </td>
-
-                <td>
-                    <p>{!contact.Email}</p>
-
-                </td>
-
-
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th id='name'  data-dir='asc'  onclick="{!c.sortColumn}">Name </th>
+                <th id='phone' data-dir='asc' onclick="{!c.sortColumn}">Phone</th>
+                <th id='email' data-dir='asc' onclick="{!c.sortColumn}">Email</th>
             </tr>
-        </aura:iteration>
+        </thead>
+        <tbody>
+            <aura:iteration items="{!v.contacts}" var="contact">
+                <tr><td>
+                    <a href="{! '#contact/' + contact.Id }">
+                        <p>{!contact.Id}</p>
+                    </a>
+                    </td>
+                    <td>
+                        <p>{!contact.Name}</p>
+
+                    </td>
+                    <td>
+                        <p>{!contact.Phone}</p>
+
+                    </td>
+
+                    <td>
+                        <p>{!contact.Email}</p>
+
+                    </td>
+
+
+                </tr>
+            </aura:iteration>
+        </tbody>
     </table>
 
 
